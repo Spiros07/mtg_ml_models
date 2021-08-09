@@ -86,4 +86,21 @@ def benchmark(clf):
     return clf_descr, score, train_time, val_time
 
 
+for penalty in ["l2", "l1"]:
+    print('=' * 80)
+    print("%s penalty" % penalty.upper())
+    # Train Liblinear model
+    results.append(benchmark(LinearSVC(penalty=penalty, dual=False,
+                                       tol=1e-3, max_iter=5000)))
+
+    # Train SGD model
+    results.append(benchmark(SGDClassifier(alpha=.0001, max_iter=150,
+                                           penalty=penalty)))
+
+
+
+
+
+
+
 # %%
