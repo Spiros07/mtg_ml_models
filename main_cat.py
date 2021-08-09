@@ -112,7 +112,32 @@ for penalty in ["l2", "l1"]:
 
 
 
+# Train SGD with Elastic Net penalty
+print('=' * 80)
+print("Elastic-Net penalty")
+results.append(benchmark(SGDClassifier(alpha=.0001, max_iter=50,
+                                       penalty="elasticnet")))
 
+# Train NearestCentroid without threshold
+print('=' * 80)
+print("NearestCentroid (aka Rocchio classifier)")
+results.append(benchmark(NearestCentroid()))
+
+# Train sparse Naive Bayes classifiers
+print('=' * 80)
+print("Naive Bayes")
+results.append(benchmark(MultinomialNB(alpha=.01)))
+results.append(benchmark(BernoulliNB(alpha=.01)))
+results.append(benchmark(ComplementNB(alpha=.1)))
+
+print('=' * 80)
+print("LinearSVC with L1-based feature selection")
+# The smaller C, the stronger the regularization.
+# The more regularization, the more sparsity.
+results.append(benchmark(Pipeline([
+  ('feature_selection', SelectFromModel(LinearSVC(penalty="l1", dual=False,
+                                                  tol=1e-3, max_iter=5000))),
+  ('classification', LinearSVC(penalty="l2"))])))
 
 
 
