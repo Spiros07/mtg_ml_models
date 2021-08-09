@@ -2,7 +2,6 @@
 import pandas as pd
 from time import time
 import matplotlib.pyplot as plt
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import RidgeClassifier
 from sklearn.pipeline import Pipeline
@@ -27,7 +26,7 @@ dtf = get_cat_data()
 
 #choose columns for classification - 'market price ($)', 'main type', 'rarity', 'market price ($)', 
 #            'foil price ($)', 'converted mana cost'. 
-X, y =dtf['rarity'], dtf['market price ($)']
+X, y =dtf['rarity'], dtf['converted mana cost']
 
 #split the dataset
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=20)   
