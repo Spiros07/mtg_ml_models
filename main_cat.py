@@ -153,7 +153,7 @@ indices = np.arange(len(results))
 print(indices)
 
 
-results = [[x[i] for x in results] for i in range(4)]
+results = [[x[i] for x in results] for i in range(6)]
 print(results)
 
 clf_names, val_score, training_time, val_time, test_score, test_time = results
@@ -169,7 +169,7 @@ plt.barh(indices, val_score, .2, label="val score", color='navy')
 plt.barh(indices + .6, val_time, .2, label="val time", color='darkorange')
 
 plt.barh(indices, test_score, .2, label="test score", color='green')         
-plt.barh(indices + .5, test_time, .2, label="test time", color='lightrange')
+plt.barh(indices + .5, test_time, .2, label="test time", color='lightgreen')
 
 
 
