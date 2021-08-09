@@ -73,16 +73,23 @@ def benchmark(clf):
     print("val time:  %0.3fs" % val_time)
 
     val_score = metrics.accuracy_score(y_val, val_pred)
-    print("accuracy:   %0.3f" % val_score)
+    print("val accuracy:   %0.3f" % val_score)
 
-    
+    t0 = time()
+    test_pred = clf.predict(hot_enc_test)
+    test_time = time() - t0
+    print("test time:  %0.3fs" % test_time)
+
+    test_score = metrics.accuracy_score(y_test, test_pred)
+    print("test accuracy:   %0.3f" % test_score)
+
     #confusion matrix if needed
     # print("confusion matrix:")
     # print(metrics.confusion_matrix(y_val, pred))
 
     print()
     clf_descr = str(clf).split('(')[0]
-    return clf_descr, val_score, train_time, val_time
+    return clf_descr, val_score, train_time, val_time, test_score, test_time
 
 
 results = []
@@ -143,19 +150,28 @@ results.append(benchmark(Pipeline([
 
 #plot a bargraph that show the different times and scores
 indices = np.arange(len(results))
+print(indices)
+
 
 results = [[x[i] for x in results] for i in range(4)]
+print(results)
 
-clf_names, val_score, training_time, test_time = results
+clf_names, val_score, training_time, val_time, test_score, test_time = results
 training_time = np.array(training_time) / np.max(training_time)
-test_time = np.array(test_time) / np.max(test_time)
+val_time = np.array(val_time) / np.max(val_time)
 
 plt.figure(figsize=(12, 8))
-plt.title("Val Score")
+plt.title("Score")
 plt.barh(indices, val_score, .2, label="val score", color='navy')
 plt.barh(indices + .3, training_time, .2, label="training time",
          color='c')
-plt.barh(indices + .6, test_time, .2, label="test time", color='darkorange')
+plt.barh(indices, val_score, .2, label="val score", color='navy')         
+plt.barh(indices + .6, val_time, .2, label="val time", color='darkorange')
+
+plt.barh(indices, test_score, .2, label="test score", color='green')         
+plt.barh(indices + .5, test_time, .2, label="test time", color='lightrange')
+
+
 
 plt.yticks(())
 plt.legend(loc='best')
