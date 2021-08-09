@@ -150,11 +150,8 @@ results.append(benchmark(Pipeline([
 
 #plot a bargraph that show the different times and scores
 indices = np.arange(len(results))
-print(indices)
-
 
 results = [[x[i] for x in results] for i in range(6)]
-print(results)
 
 clf_names, val_score, training_time, val_time, test_score, test_time = results
 training_time = np.array(training_time) / np.max(training_time)
@@ -162,14 +159,13 @@ val_time = np.array(val_time) / np.max(val_time)
 
 plt.figure(figsize=(12, 8))
 plt.title("Score")
-plt.barh(indices, val_score, .2, label="val score", color='navy')
-plt.barh(indices + .3, training_time, .2, label="training time",
+plt.barh(indices , training_time, .1, label="training time",
          color='c')
-plt.barh(indices, val_score, .2, label="val score", color='navy')         
-plt.barh(indices + .6, val_time, .2, label="val time", color='darkorange')
+plt.barh(indices + .2, val_score, .1, label="val score", color='navy')         
+plt.barh(indices + .4, val_time, .1, label="val time", color='darkorange')
 
-plt.barh(indices, test_score, .2, label="test score", color='green')         
-plt.barh(indices + .5, test_time, .2, label="test time", color='lightgreen')
+plt.barh(indices + .8, test_score, .1, label="test score", color='green')         
+plt.barh(indices + 1.0, test_time, .1, label="test time", color='lightgreen')
 
 
 
