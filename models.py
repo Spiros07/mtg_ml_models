@@ -16,3 +16,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 import numpy as np
 
+
+#the columns used for analysis
+target_names = ['rarity', 'market price ($)']
