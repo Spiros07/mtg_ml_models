@@ -86,6 +86,19 @@ def benchmark(clf):
     return clf_descr, score, train_time, val_time
 
 
+results = []
+for clf, name in (
+        (RidgeClassifier(tol=1e-2, solver="sag"), "Ridge Classifier"),
+        (Perceptron(max_iter=50), "Perceptron"),
+        (PassiveAggressiveClassifier(max_iter=50),
+         "Passive-Aggressive"),
+        (KNeighborsClassifier(n_neighbors=10), "kNN"),
+        (RandomForestClassifier(), "Random forest")):
+    print('=' * 80)
+    print(name)
+    results.append(benchmark(clf))
+
+
 for penalty in ["l2", "l1"]:
     print('=' * 80)
     print("%s penalty" % penalty.upper())
