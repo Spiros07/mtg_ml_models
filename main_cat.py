@@ -1,8 +1,25 @@
 #%%
 import pandas as pd
+from time import time
+import matplotlib.pyplot as plt
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_selection import SelectFromModel
+from sklearn.linear_model import RidgeClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.svm import LinearSVC
+from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import Perceptron
+from sklearn.linear_model import PassiveAggressiveClassifier
+from sklearn.naive_bayes import BernoulliNB, ComplementNB, MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import NearestCentroid
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import metrics
+import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 from data import get_cat_data
+
 
 
 
@@ -33,6 +50,40 @@ enc.fit(X_train_matrix)
 hot_enc_train = enc.transform(X_train_matrix).toarray()
 hot_enc_val = enc.transform(X_val_matrix).toarray()
 hot_enc_test = enc.transform(X_test_matrix).toarray()
+
+
+#the columns used for analysis
+target_names = ['rarity', 'market price ($)']
+
+
+def benchmark(clf):
+    '''-fits the data and predicts for val and test set
+       -calculates the time needed for the model to run'''
+       
+    print('_' * 80)
+    print("Training: ")
+    print(clf)
+    t0 = time()
+    clf.fit(hot_enc_train, y_train)
+    train_time = time() - t0
+    print("train time: %0.3fs" % train_time)
+
+    t0 = time()
+    pred = clf.predict(hot_enc_val)
+    val_time = time() - t0
+    print("val time:  %0.3fs" % val_time)
+
+    score = metrics.accuracy_score(y_val, pred)
+    print("accuracy:   %0.3f" % score)
+
+    
+    #confusion matrix if needed
+    # print("confusion matrix:")
+    # print(metrics.confusion_matrix(y_val, pred))
+
+    print()
+    clf_descr = str(clf).split('(')[0]
+    return clf_descr, score, train_time, val_time
 
 
 # %%
