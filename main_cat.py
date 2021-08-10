@@ -110,7 +110,7 @@ for penalty in ["l2", "l1"]:
     print("%s penalty" % penalty.upper())
     # Train Liblinear model
     results.append(benchmark(LinearSVC(penalty=penalty, dual=False,
-                                       tol=1e-3, max_iter=5000)))
+                                       tol=1e-3, max_iter=6000)))
 
     # Train SGD model
     results.append(benchmark(SGDClassifier(alpha=.0001, max_iter=150,
@@ -142,7 +142,7 @@ print("LinearSVC with L1-based feature selection")
 # The more regularization, the more sparsity.
 results.append(benchmark(Pipeline([
   ('feature_selection', SelectFromModel(LinearSVC(penalty="l1", dual=False,
-                                                  tol=1e-3, max_iter=5000))),
+                                                  tol=1e-3, max_iter=6000))),
   ('classification', LinearSVC(penalty="l2"))])))
 
 
