@@ -24,8 +24,9 @@ from data import get_cat_data
 
 dtf = get_cat_data()
 
-#choose columns for classification - 'market price ($)', 'main type', 'rarity', 'market price ($)', 
-#            'foil price ($)', 'converted mana cost'. 
+#choose any 2 columns for classification - 'market price ($)', 'main type', 
+#                                           'rarity', 'market price ($)', 
+#                                           'foil price ($)', 'converted mana cost'. 
 X, y =dtf['rarity'], dtf['converted mana cost']
 
 #split the dataset
@@ -49,10 +50,6 @@ enc.fit(X_train_matrix)
 hot_enc_train = enc.transform(X_train_matrix).toarray()
 hot_enc_val = enc.transform(X_val_matrix).toarray()
 hot_enc_test = enc.transform(X_test_matrix).toarray()
-
-
-#the columns used for analysis
-target_names = ['rarity', 'market price ($)']
 
 
 def benchmark(clf):
