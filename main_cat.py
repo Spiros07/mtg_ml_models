@@ -90,7 +90,6 @@ def all_results():
                                                     tol=1e-3, max_iter=6000))),
     ('classification', LinearSVC(penalty="l2"))])))
 
-
     for clf, name in (
             (RidgeClassifier(tol=1e-2, solver="sag"), "Ridge Classifier"),
             (Perceptron(max_iter=50), "Perceptron"),
@@ -101,14 +100,12 @@ def all_results():
 
         results.append(benchmark(clf))
 
-
     for penalty in ["l2", "l1"]:
         results.append(benchmark(LinearSVC(penalty=penalty, dual=False,
                                         tol=1e-3, max_iter=6000)))
 
         results.append(benchmark(SGDClassifier(alpha=.0001, max_iter=150,
                                             penalty=penalty)))
-
 
 
     results.append(benchmark(SGDClassifier(alpha=.0001, max_iter=50,
@@ -121,8 +118,7 @@ def all_results():
     results.append(benchmark(MultinomialNB(alpha=.01)))
     results.append(benchmark(BernoulliNB(alpha=.01)))
     results.append(benchmark(ComplementNB(alpha=.1)))
-
-    
+  
 
     return results
 
