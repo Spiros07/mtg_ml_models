@@ -22,12 +22,13 @@ from data import get_cat_data
 
 
 
+
 dtf = get_cat_data()
 
-#choose any 2 columns for classification - 'market price ($)', 'main type', 
+#choose any 2 columns for classification -  'main type', 
 #                                           'rarity', 'market price ($)', 
 #                                           'foil price ($)', 'converted mana cost'. 
-X, y =dtf['rarity'], dtf['converted mana cost']
+X, y =dtf['rarity'], dtf['market price ($)']
 
 #split the dataset
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=20)   
@@ -55,36 +56,27 @@ hot_enc_test = enc.transform(X_test_matrix).toarray()
 def benchmark(clf):
     '''-fits the data and predicts for val and test set
        -calculates the time needed for the model to run'''
-       
-    print('_' * 80)
-    print("Training: ")
-    print(clf)
+          
     t0 = time()
     clf.fit(hot_enc_train, y_train)
     train_time = time() - t0
-    print("train time: %0.3fs" % train_time)
 
     t0 = time()
     val_pred = clf.predict(hot_enc_val)
     val_time = time() - t0
-    print("val time:  %0.3fs" % val_time)
 
     val_score = metrics.accuracy_score(y_val, val_pred)
-    print("val accuracy:   %0.3f" % val_score)
 
     t0 = time()
     test_pred = clf.predict(hot_enc_test)
     test_time = time() - t0
-    print("test time:  %0.3fs" % test_time)
 
     test_score = metrics.accuracy_score(y_test, test_pred)
-    print("test accuracy:   %0.3f" % test_score)
 
     #confusion matrix if needed
     # print("confusion matrix:")
     # print(metrics.confusion_matrix(y_val, pred))
 
-    print()
     clf_descr = str(clf).split('(')[0]
     return clf_descr, val_score, train_time, val_time, test_score, test_time
 
@@ -93,8 +85,6 @@ def benchmark(clf):
 def all_results():
     results = []
 
-    print('=' * 80)
-    print("LinearSVC with L1-based feature selection")
     results.append(benchmark(Pipeline([
     ('feature_selection', SelectFromModel(LinearSVC(penalty="l1", dual=False,
                                                     tol=1e-3, max_iter=6000))),
@@ -108,38 +98,26 @@ def all_results():
             "Passive-Aggressive"),
             (KNeighborsClassifier(n_neighbors=10), "kNN"),
             (RandomForestClassifier(), "Random forest")):
-        print('=' * 80)
-        print(name)
+
         results.append(benchmark(clf))
 
 
     for penalty in ["l2", "l1"]:
-        print('=' * 80)
-        print("%s penalty" % penalty.upper())
-        # Train Liblinear model
         results.append(benchmark(LinearSVC(penalty=penalty, dual=False,
                                         tol=1e-3, max_iter=6000)))
 
-        # Train SGD model
         results.append(benchmark(SGDClassifier(alpha=.0001, max_iter=150,
                                             penalty=penalty)))
 
 
 
-    # Train SGD with Elastic Net penalty
-    print('=' * 80)
-    print("Elastic-Net penalty")
     results.append(benchmark(SGDClassifier(alpha=.0001, max_iter=50,
                                         penalty="elasticnet")))
 
     # Train NearestCentroid without threshold
-    print('=' * 80)
-    print("NearestCentroid (aka Rocchio classifier)")
     results.append(benchmark(NearestCentroid()))
 
     # Train sparse Naive Bayes classifiers
-    print('=' * 80)
-    print("Naive Bayes")
     results.append(benchmark(MultinomialNB(alpha=.01)))
     results.append(benchmark(BernoulliNB(alpha=.01)))
     results.append(benchmark(ComplementNB(alpha=.1)))
@@ -186,48 +164,9 @@ for i, c in zip(indices, clf_names):
 
 plt.show()
 
+
+
+
+
+
 # %%
-
-
-def plot_bar_graph():
-    '''runs the models, gathers the data and plots the graph'''
-    results = all_results()
-    #plot a bargraph that show the different times and scores
-    indices = np.arange(len(results))
-
-    results = [[x[i] for x in results] for i in range(6)]
-
-    clf_names, val_score, training_time, val_time, test_score, test_time = results
-    training_time = np.array(training_time) / np.max(training_time)
-    val_time = np.array(val_time) / np.max(val_time)
-
-    plt.figure(figsize=(12, 8))
-    plt.title("Score")
-    plt.barh(indices , training_time, .1, label="training time",
-            color='c')
-    plt.barh(indices + .2, val_score, .1, label="val score", color='navy')         
-    plt.barh(indices + .4, val_time, .1, label="val time", color='darkorange')
-
-    plt.barh(indices + .8, test_score, .1, label="test score", color='green')         
-    plt.barh(indices + 1.0, test_time, .1, label="test time", color='lightgreen')
-
-
-
-    plt.yticks(())
-    plt.legend(loc='best')
-    plt.subplots_adjust(left=.25)
-    plt.subplots_adjust(top=.95)
-    plt.subplots_adjust(bottom=.05)
-
-    #print the names in the y-axis of the graph
-    for i, c in zip(indices, clf_names):
-        plt.text(-.3, i, c)
-
-    plt.show()
-
-
-plot_bar_graph()
-
-
-
-

@@ -23,8 +23,10 @@ def get_cat_data():
     df['market price ($)'] = df['market price ($)'].astype(str)
     df['foil price ($)'] = df['foil price ($)'].astype(str)
     df
+
+    #change Nan to none in 'coloured mana' column to support colourless cards
+    df['coloured mana'] = df['coloured mana'].fillna('none')
+
     return df
-
-
 
 # %%
