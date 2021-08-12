@@ -47,3 +47,5 @@ For the regressions analysis, I only run a Linear regression to get a benchmark.
 Classification models need to be enriched with more parametrisation to check if the results can be improved
 
 Regression analysis needs more models so that a proper comparison between models can be performed and better results can be acquired.
+
+main_cat and main_lin_regr files to be merged to one.
